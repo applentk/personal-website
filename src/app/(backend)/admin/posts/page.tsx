@@ -1,19 +1,26 @@
-import { PostCreateDialogButton } from "@/features/posts/components/backend/post-create-dialog";
 import { PostTable } from "@/features/posts/components/backend/post-table";
-import { getAllPosts } from "@/features/posts/queries";
+import { createPost, getAllPosts } from "@/features/posts/queries";
+import { redirect } from "next/navigation";
 
 export default async function PostsPage() {
-  const posts = await getAllPosts();
+  const posts = await getAllPosts()
+
+  async function onClickCreatePost() {
+    "use server"
+
+    const newPost = await createPost()
+    redirect(`/admin/posts/${newPost.id}`);
+  }
 
   return (
     <div className="flex flex-col">
-      <h1 className="text-4xl font-bold">
-        Post
+      <h1 className="text-xl">
+        posts
       </h1>
-
-      <PostCreateDialogButton className="ml-auto mt-2">
-        say something
-      </PostCreateDialogButton>
+      
+      <button onClick={ onClickCreatePost } className="ml-auto mt-2 px-2 py-1 border hover:cursor-default">
+        new post
+      </button>
       
       <PostTable
         posts={ posts }

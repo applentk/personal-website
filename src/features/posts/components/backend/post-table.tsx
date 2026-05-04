@@ -1,7 +1,8 @@
-import type { Post } from "@/types/post";
-import { ComponentProps } from "react";
+"use client"
 
-import Link from "next/link";
+import type { Post } from "@/types/post";
+import { useRouter } from "next/navigation";
+import { ComponentProps } from "react";
 
 interface PostTable {
   posts: Post[]
@@ -10,6 +11,8 @@ interface PostTable {
 const postTableHeaders = ["title", "date created", "last update", "status", "views"];
 
 export function PostTable({ posts, className }: PostTable & ComponentProps<"table">) {
+  const router = useRouter();
+
   return (
     <table className={ className }>
       <thead className="border">
@@ -23,16 +26,18 @@ export function PostTable({ posts, className }: PostTable & ComponentProps<"tabl
       </thead>
       <tbody>
         { posts.map((post) => 
-          <tr key={ post.id } className="border">
-            <td className="w-sm py-2 pl-2 pr-8">
-              <Link href={ `/admin/posts/${post.id}` } className="hover:underline hover:cursor-default">
-                { post.title }
-              </Link>
+          <tr
+            onClick={() => router.push(`/admin/posts/${post.id}`)}
+            key={ post.id }
+            className="border hover:bg-gray-50"
+          >
+            <td className="w-sm pl-2 pr-8 cursor-default">
+              { post.title || <span className="text-gray-300">No title</span> }
             </td>
-            <td className="pr-8">
+            <td className="pr-8 py-2">
               { post.createdAt.toLocaleString("th-TH") }
             </td>
-            <td className="pr-8">
+            <td className="pr-8 py-2">
               { post.updatedAt.toLocaleString("th-TH") }
             </td>
             <td className="pr-8">

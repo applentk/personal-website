@@ -18,7 +18,7 @@ export function Sidebar({ items, className }: SidebarProps & ComponentProps<"nav
       <ul className="flex flex-col text-lg">
         { items.map(({ label, href }) => 
           <li key={ label } className="group flex items-center gap-3 py-2">
-            <span className={ `${ pathname === href ? "opacity-100" : "opacity-0" } h-full w-px bg-black` } />
+            <span className={ `${ pathname.includes(href) ? "opacity-100" : "opacity-0" } h-full w-px bg-black` } />
             <Link href={ href } className="hover:cursor-default">
               { label }
             </Link>

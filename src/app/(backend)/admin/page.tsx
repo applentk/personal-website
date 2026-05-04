@@ -1,9 +1,3 @@
-export default function AdminPage() {
-  return (
-    <div>
-      <h1 className="text-4xl font-bold">
-        Overview
-      </h1>
-    </div>
-  );
-}
+import { redirect } from "next/navigation";
+
+export default () => redirect("/admin/overview");
