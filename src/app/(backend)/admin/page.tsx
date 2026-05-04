@@ -1,3 +1,5 @@
 import { redirect } from "next/navigation";
 
-export default () => redirect("/admin/overview");
+export default function AdminPage() {
+  return redirect("/admin/overview");
+}

@@ -1,10 +1,7 @@
 "use server"
 
 import prisma from "@/lib/prisma"
-import s3 from "@/lib/s3";
 import { Post } from "@/types/post";
-import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
-import { randomUUID } from "crypto";
 
 export async function getAllPosts(includeDrafts = false) {
   return await prisma.post.findMany({
@@ -49,29 +46,4 @@ export async function deletePost(id: string) {
       id: id
     }
   });
-}
-
-export async function uploadImage(postId: string, formData: FormData) {
-  const file = formData.get("file") as File | null
-
-  if (!file) {
-    throw new Error("No file provided")
-  }
-
-  const BUCKET = process.env.S3_BUCKET_NAME!;
-  const key = `posts/${postId}/${file.name}`
-
-  const buffer = Buffer.from(await file.arrayBuffer())
-
-  await s3.send(
-    new PutObjectCommand({
-      Bucket: BUCKET,
-      Key: key,
-      Body: buffer,
-      ContentType: file.type,
-      ACL: "public-read",
-    })
-  );
-
-  return `${process.env.S3_URL}/${BUCKET}/${key}`
 }

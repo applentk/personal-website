@@ -3,7 +3,7 @@
 import { Editor } from "@tiptap/react"
 import { useEffect, useRef, useState, useCallback } from "react"
 import { slashCommandPluginKey } from "../extensions/slash-command"
-import { uploadImage } from "@/features/posts/queries"
+import { getUploadUrl } from "@/utils/s3"
 
 interface Command {
   title: string
@@ -80,7 +80,7 @@ const COMMANDS: Command[] = [
   {
     title: "Image",
     markdownQuery: "image",
-    icon: "🖼",
+    icon: "IMG",
     action: (editor, range, postId) => {
       editor.chain().focus().deleteRange(range).run()
       const input = document.createElement("input")
@@ -91,8 +91,18 @@ const COMMANDS: Command[] = [
         if (!file) return
         const formData = new FormData()
         formData.append("file", file)
-        const url = await uploadImage(postId, formData)
-        editor.chain().focus().insertContent({ type: "image", attrs: { src: url } }).run()
+        
+        const key = `posts/${postId}/${file.name}`
+        const url = await getUploadUrl(key, file.type);
+
+        await fetch(url, {
+          method: "PUT",
+          body: file,
+          headers: { "Content-Type": file.type },
+        });
+
+        const publicUrl = `${process.env.NEXT_PUBLIC_S3_PUBLIC_URL}/${key}`
+        editor.chain().focus().insertContent({ type: "image", attrs: { src: publicUrl } }).run()
       }
       input.click()
     },
