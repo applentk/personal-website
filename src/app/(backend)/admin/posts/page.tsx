@@ -1,7 +1,6 @@
 import { PostCreateDialogButton } from "@/features/posts/components/backend/post-create-dialog";
 import { PostTable } from "@/features/posts/components/backend/post-table";
 import { getAllPosts } from "@/features/posts/queries";
-import Link from "next/link";
 
 export default async function PostsPage() {
   const posts = await getAllPosts();

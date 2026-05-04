@@ -1,6 +1,7 @@
 "use client"
 
-import { ComponentProps, ReactNode, useState } from "react";
+import { ComponentProps, ReactNode, SubmitEvent, useState } from "react";
+import { createPost } from "../../queries";
 
 interface PostCreateDialogButtonProps extends ComponentProps<"button"> {
   children: ReactNode
@@ -32,6 +33,16 @@ interface PostCreateDialogProps {
 export function PostCreateDialog({ isOpen, onClickClose }: PostCreateDialogProps) {
   if (!isOpen) return null;
 
+  async function onSubmitForm(e: SubmitEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const title = formData.get("title") as string;
+    const content = formData.get("content") as string;
+
+    await createPost(title, content);
+    onClickClose();
+  }
+
   return (
     <div
       onClick={ onClickClose }
@@ -41,7 +52,7 @@ export function PostCreateDialog({ isOpen, onClickClose }: PostCreateDialogProps
         onClick={ (e) => e.stopPropagation() }
         className="flex flex-col bg-white p-4 w-xl h-96"
       >
-        <form className="flex flex-col grow">
+        <form className="flex flex-col grow" onSubmit={ onSubmitForm }>
           <label htmlFor="title">
             title
           </label>

@@ -13,3 +13,32 @@ export async function getPost(id: string) {
     }
   });
 }
+
+export async function createPost(title: string, content: string) {
+  return await prisma.post.create({
+    data: {
+      title,
+      content
+    }
+  });
+}
+
+export async function updatePost(id: string, title: string, content: string) {
+  return await prisma.post.update({
+    where: {
+      id: id
+    },
+    data: {
+      title,
+      content
+    }
+  });
+}
+
+export async function deletePost(id: string) {
+  return await prisma.post.delete({
+    where: {
+      id: id
+    }
+  });
+}
