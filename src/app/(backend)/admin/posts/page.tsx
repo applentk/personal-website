@@ -3,7 +3,7 @@ import { createPost, getAllPosts } from "@/features/posts/queries";
 import { redirect } from "next/navigation";
 
 export default async function PostsPage() {
-  const posts = await getAllPosts()
+  const posts = await getAllPosts(true);
 
   async function onClickCreatePost() {
     "use server"

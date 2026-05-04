@@ -3,11 +3,15 @@
 import prisma from "@/lib/prisma"
 import s3 from "@/lib/s3";
 import { Post } from "@/types/post";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { randomUUID } from "crypto";
 
-export async function getAllPosts() {
-  return await prisma.post.findMany();
+export async function getAllPosts(includeDrafts = false) {
+  return await prisma.post.findMany({
+    where: {
+      published: includeDrafts ? undefined : true
+    }
+  });
 }
 
 export async function getPost(id: string) {
@@ -55,8 +59,7 @@ export async function uploadImage(postId: string, formData: FormData) {
   }
 
   const BUCKET = process.env.S3_BUCKET_NAME!;
-  const ext = file.name.split(".").pop() ?? "bin"
-  const key = `posts/${postId}/${file.name}.${ext}`
+  const key = `posts/${postId}/${file.name}`
 
   const buffer = Buffer.from(await file.arrayBuffer())
 
@@ -66,11 +69,9 @@ export async function uploadImage(postId: string, formData: FormData) {
       Key: key,
       Body: buffer,
       ContentType: file.type,
+      ACL: "public-read",
     })
   );
 
-  const s3Endpoint = process.env.S3_URL!
-  const url = `${s3Endpoint}/${BUCKET}/${key}`
-
-  return url;
+  return `${process.env.S3_URL}/${BUCKET}/${key}`
 }
