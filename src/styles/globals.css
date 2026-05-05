@@ -12,7 +12,7 @@
   @apply outline-none;
 
   p {
-    @apply text-lg my-2 text-gray-800;
+    @apply my-2 text-gray-800;
   }
 
   h1 {
@@ -37,5 +37,17 @@
 
   code {
     @apply bg-gray-100 px-1 rounded;
+  }
+
+  blockquote {
+    @apply border-l-4 border-gray-300 pl-4 my-2 text-gray-500 italic;
+  }
+
+  img {
+    @apply mx-auto block h-80;
+  }
+
+  a {
+    @apply underline hover:text-gray-600 cursor-pointer;
   }
 }

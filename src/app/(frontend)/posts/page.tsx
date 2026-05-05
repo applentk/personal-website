@@ -1,19 +1,20 @@
+import { PostCard } from "@/features/post/components/post-card"
 import { getAllPosts } from "@/features/post/queries"
 
 export default async function PostPage() {
-  const posts = await getAllPosts()
+  const posts = await getAllPosts(false)
 
   return (
     <div className="flex flex-col">
-      <h6>
-        me yapping about me
-      </h6>
-      <ul className="mt-6 grid grid-cols-3 gap-1 w-full">
-        { posts.map((post) => (
-          <li key={ post.id } className="border p-2">
-            { post.title }
+      <h1 className="text-3xl font-semibold self-center text-center">
+        about me yapping about me
+      </h1>
+      <ul className="mt-6 grid grid-cols-2 gap-2 w-full">
+        {posts.map((post) => (
+          <li key={post.id}>
+            <PostCard post={post} />
           </li>
-        )) }
+        ))}
       </ul>
     </div>
   )

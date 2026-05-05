@@ -1,4 +1,4 @@
-import PostEditForm from "@/features/post/components/backend/post-edit-form"
+import PostEditForm from "@/features/post/components/post-editor"
 import { deletePost, getPost, updatePost } from "@/features/post/queries"
 import Link from "next/link"
 import { notFound, redirect } from "next/navigation"
@@ -17,8 +17,8 @@ export default async function PostIdPage({ params }: PostIdPageProps) {
 
   return (
     <div>
-      <div className="flex justify-between">
-        <h1 className="text-xl align-middle">
+      <div className="flex justify-between items-start">
+        <h1 className="text-lg">
           <Link href={ "/admin/posts" } className="opacity-25 font-light">posts {">"}</Link> { post.title || "edit" }
         </h1>
         <div className="flex gap-2">
@@ -26,6 +26,7 @@ export default async function PostIdPage({ params }: PostIdPageProps) {
             onClick={ async () => {
               "use server"
               await updatePost(id, { ...post, published: !post.published })
+              redirect(`/admin/posts/${id}`)
             } }
             className="hover:underline"
           >
@@ -45,11 +46,12 @@ export default async function PostIdPage({ params }: PostIdPageProps) {
       </div>
 
       <PostEditForm
-        post={ post }
+        initialPost={ post }
         onUpdate={ async (updatedPost) => {
           "use server"
           await updatePost(id, updatedPost)
         } }
+        className="my-4"
       />
     </div>
   )

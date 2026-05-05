@@ -3,13 +3,21 @@
 import { Editor } from "@tiptap/react"
 import { useEffect, useRef, useState, useCallback } from "react"
 import { slashCommandPluginKey } from "../extensions/slash-command"
-import { getUploadUrl } from "@/utils/s3"
+import FileSelectorDialog from "@/features/files/components/file-selector-dialog"
+
+interface CommandCallbacks {
+  onOpenImageDialog: () => void
+}
 
 interface Command {
   title: string
   markdownQuery: string
   icon: string
-  action: (editor: Editor, range: { from: number; to: number }, postId: string) => void
+  action: (
+    editor: Editor,
+    range: { from: number; to: number },
+    callbacks: CommandCallbacks
+  ) => void
 }
 
 const COMMANDS: Command[] = [
@@ -81,48 +89,27 @@ const COMMANDS: Command[] = [
     title: "Image",
     markdownQuery: "image",
     icon: "img",
-    action: (editor, range, postId) => {
+    action: (editor, range, callbacks) => {
       editor.chain().focus().deleteRange(range).run()
-      const input = document.createElement("input")
-      input.type = "file"
-      input.accept = "image/*"
-      input.onchange = async () => {
-        const file = input.files?.[0]
-        if (!file) return
-
-        const formData = new FormData()
-        formData.append("file", file)
-        
-        const key = process.env.NODE_ENV === "production"
-          ? `posts/${file.name}`
-          : `posts/dev/${file.name}`
-        
-        const url = await getUploadUrl(key, file.type)
-
-        await fetch(url, {
-          method: "PUT",
-          body: file,
-          headers: { "Content-Type": file.type },
-        })
-
-        const publicUrl = `${process.env.NEXT_PUBLIC_S3_PUBLIC_URL}/${key}`
-        editor.chain().focus().insertContent({ type: "image", attrs: { src: publicUrl } }).run()
-      }
-      input.click()
+      callbacks.onOpenImageDialog()
     },
   },
 ]
 
 interface SlashCommandMenuProps {
   editor: Editor
-  postId: string
 }
 
-export default function SlashCommandMenu({ editor, postId }: SlashCommandMenuProps) {
+export default function SlashCommandMenu({ editor }: SlashCommandMenuProps) {
   const [state, setState] = useState({ active: false, query: "", range: { from: 0, to: 0 } })
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [position, setPosition] = useState<{ top: number; left: number } | null>(null)
+  const [imageDialogOpen, setImageDialogOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
+
+  const callbacks: CommandCallbacks = {
+    onOpenImageDialog: () => setImageDialogOpen(true),
+  }
 
   const filteredCommands = COMMANDS.filter(
     (cmd) =>
@@ -134,9 +121,9 @@ export default function SlashCommandMenu({ editor, postId }: SlashCommandMenuPro
     (index: number) => {
       const cmd = filteredCommands[index]
       if (!cmd) return
-      cmd.action(editor, state.range, postId)
+      cmd.action(editor, state.range, callbacks)
     },
-    [filteredCommands, editor, state.range, postId]
+    [filteredCommands, editor, state.range]
   )
 
   // Subscribe to plugin state changes
@@ -202,45 +189,58 @@ export default function SlashCommandMenu({ editor, postId }: SlashCommandMenuPro
     return () => document.removeEventListener("keydown", handleKeyDown, true)
   }, [state.active, filteredCommands.length, selectedIndex, runCommand])
 
-  if (!state.active || !position || filteredCommands.length === 0) return null
-
   return (
-    <div
-      ref={menuRef}
-      className="absolute z-50 min-w-64 border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-900"
-      style={{ top: position.top, left: position.left }}
-    >
-      <div className="p-2">
-        <p className="px-2 py-1 text-xs font-medium text-zinc-400 dark:text-zinc-500">
-          BLOCKS
-        </p>
-        {filteredCommands.map((cmd, i) => (
-          <button
-            key={cmd.title}
-            onMouseDown={(e) => {
-              e.preventDefault()
-              runCommand(i)
-            }}
-            className={`flex w-full items-center gap-3 px-2 py-1.5 text-left transition-colors ${
-              i === selectedIndex
-                ? "bg-zinc-100 dark:bg-zinc-800"
-                : "hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
-            }`}
-          >
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center border border-zinc-200 bg-white text-xs font-semibold text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
-              {cmd.icon}
-            </span>
-            <div>
-              <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                {cmd.title}
-              </p>
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                {cmd.markdownQuery}
-              </p>
-            </div>
-          </button>
-        ))}
-      </div>
-    </div>
+    <>
+      <FileSelectorDialog
+        open={imageDialogOpen}
+        onSelect={({ url }) =>
+          editor
+            .chain()
+            .focus()
+            .setImage({ src: url })
+            .run()
+        }
+        onClose={() => setImageDialogOpen(false)}
+      />
+      {state.active && position && filteredCommands.length > 0 && (
+        <div
+          ref={menuRef}
+          className="absolute z-50 min-w-64 border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-900"
+          style={{ top: position.top, left: position.left }}
+        >
+          <div className="p-2">
+            <p className="px-2 py-1 text-xs font-medium text-zinc-400 dark:text-zinc-500">
+              BLOCKS
+            </p>
+            {filteredCommands.map((cmd, i) => (
+              <button
+                key={cmd.title}
+                onMouseDown={(e) => {
+                  e.preventDefault()
+                  runCommand(i)
+                }}
+                className={`flex w-full items-center gap-3 px-2 py-1.5 text-left transition-colors ${
+                  i === selectedIndex
+                    ? "bg-zinc-100 dark:bg-zinc-800"
+                    : "hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
+                }`}
+              >
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center border border-zinc-200 bg-white text-xs font-semibold text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+                  {cmd.icon}
+                </span>
+                <div>
+                  <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                    {cmd.title}
+                  </p>
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                    {cmd.markdownQuery}
+                  </p>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </>
   )
 }

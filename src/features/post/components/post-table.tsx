@@ -1,6 +1,6 @@
 "use client"
 
-import type { Post } from "@/types/post"
+import type { Post } from "@/features/post/types"
 import { useRouter } from "next/navigation"
 import { ComponentProps } from "react"
 
@@ -14,12 +14,12 @@ export function PostTable({ posts, className }: PostTable & ComponentProps<"tabl
   const router = useRouter()
 
   return (
-    <table className={ className }>
-      <thead className="border">
+    <table className={className}>
+      <thead className="border border-gray-300">
         <tr>
           { postTableHeaders.map((header) =>
-            <th key={ header } className="text-start font-semibold bg-gray-50 py-1 pr-8 first:pl-2 last:pr-2">
-              { header }
+            <th key={header} className="text-start font-semibold bg-gray-50 py-1 pr-8 first:pl-2 last:pr-2">
+              {header}
             </th>
           ) }
         </tr>
@@ -28,25 +28,25 @@ export function PostTable({ posts, className }: PostTable & ComponentProps<"tabl
         { posts.map((post) => 
           <tr
             onClick={() => router.push(`/admin/posts/${post.id}`)}
-            key={ post.id }
-            className="border hover:bg-gray-50"
+            key={post.id}
+            className="border border-gray-300 hover:bg-gray-50"
           >
             <td className="w-sm pl-2 pr-8 cursor-default font-sans">
-              { post.title || <span className="text-gray-300">No title</span> }
+              {post.title || <span className="text-gray-300">No title</span>}
             </td>
             <td className="pr-8 py-2">
-              { post.createdAt.toLocaleString("th-TH") }
+              {post.createdAt.toLocaleString("th-TH")}
             </td>
             <td className="pr-8 py-2">
-              { post.updatedAt.toLocaleString("th-TH") }
+              {post.updatedAt.toLocaleString("th-TH")}
             </td>
             <td className="pr-8 font-sans">
               <span className="outline px-2 py-0.5">
-                { post.published ? "published" : "draft" }
+                {post.published ? "published" : "draft"}
               </span>
             </td>
             <td className="pr-2 text">
-              { post.views }
+              {post.views}
             </td>
           </tr>
         ) }

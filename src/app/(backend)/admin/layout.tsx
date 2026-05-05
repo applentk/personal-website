@@ -1,6 +1,6 @@
 import { ReactNode } from "react"
 
-import { Sidebar } from "@/features/sidebar/components"
+import { Sidebar } from "@/features/sidebar/components/sidebar"
 import { sidebarItems } from "@/features/sidebar/constants"
 
 interface BackendLayoutProps {

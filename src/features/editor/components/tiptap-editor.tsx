@@ -7,14 +7,13 @@ import Image from "@tiptap/extension-image"
 import { SlashCommand } from "../extensions/slash-command"
 import SlashCommandMenu from "./slash-command-menu"
 
-interface PostEditorProps {
+interface TiptapEditorProps {
   placeholder?: string
-  postId: string
   defaultContent: string | null
   onUpdate?: (content: string) => void
 }
 
-export default function PostEditor({ placeholder, postId, defaultContent, onUpdate }: PostEditorProps) {
+export default function TiptapEditor({ placeholder, defaultContent, onUpdate }: TiptapEditorProps) {
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -23,6 +22,10 @@ export default function PostEditor({ placeholder, postId, defaultContent, onUpda
         placeholder: ({ node }) => {
           if (node.type.name === "heading") {
             return `Heading ${node.attrs.level}`
+          }
+
+          if (node.type.name === "codeBlock") {
+            return ""
           }
 
           return placeholder || ""
@@ -44,7 +47,6 @@ export default function PostEditor({ placeholder, postId, defaultContent, onUpda
       { editor &&
         <SlashCommandMenu
           editor={ editor }
-          postId={ postId }
         />
       }
     </div>

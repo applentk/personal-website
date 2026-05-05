@@ -1,7 +1,7 @@
 "use server"
 
 import prisma from "@/lib/prisma"
-import { Post } from "@/types/post"
+import { Post } from "@/features/post/types"
 
 export async function getAllPosts(includeDrafts = false) {
   return await prisma.post.findMany({
@@ -26,7 +26,7 @@ export async function createPost(data: Partial<Post> = {}) {
   return await prisma.post.create({
     data: {
       title: data.title ?? "",
-      content: data.content ?? ""
+      content: data.content ?? "",
     }
   })
 }
@@ -36,10 +36,7 @@ export async function updatePost(id: string, data: Partial<Post>) {
     where: {
       id: id
     },
-    data: {
-      title: data.title ?? undefined,
-      content: data.content ?? undefined
-    }
+    data: data
   })
 }
 

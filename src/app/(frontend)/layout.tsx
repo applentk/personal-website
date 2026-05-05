@@ -1,6 +1,6 @@
 import "@/styles/globals.css"
 import { ReactNode } from "react"
-import { Navbar } from "@/features/navbar/components"
+import { Navbar } from "@/features/navbar/components/navbar"
 import { navbarItems } from "@/features/navbar/constants"
 
 interface FrontendLayoutProps {
