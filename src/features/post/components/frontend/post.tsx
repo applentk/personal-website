@@ -1,4 +1,4 @@
-import type { Post } from "@/types/post";
+import type { Post } from "@/types/post"
 
 interface PostFrontendProps {
   post: Post
@@ -9,5 +9,5 @@ export function PostFrontend({ post }: PostFrontendProps) {
     <div>
       { post.title }
     </div>
-  );
+  )
 }

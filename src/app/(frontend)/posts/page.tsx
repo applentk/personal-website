@@ -1,7 +1,7 @@
-import { getAllPosts } from "@/features/posts/queries";
+import { getAllPosts } from "@/features/post/queries"
 
 export default async function PostPage() {
-  const posts = await getAllPosts();
+  const posts = await getAllPosts()
 
   return (
     <div className="flex flex-col">
@@ -16,5 +16,5 @@ export default async function PostPage() {
         )) }
       </ul>
     </div>
-  );
+  )
 }

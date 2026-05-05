@@ -1,15 +1,14 @@
-import { PostTable } from "@/features/posts/components/backend/post-table";
-import { createPost, getAllPosts } from "@/features/posts/queries";
-import { redirect } from "next/navigation";
+import { PostTable } from "@/features/post/components/backend/post-table"
+import { createPost, getAllPosts } from "@/features/post/queries"
+import { redirect } from "next/navigation"
 
 export default async function PostsPage() {
-  const posts = await getAllPosts(true);
+  const posts = await getAllPosts(true)
 
   async function onClickCreatePost() {
     "use server"
-
     const newPost = await createPost()
-    redirect(`/admin/posts/${newPost.id}`);
+    redirect(`/admin/posts/${newPost.id}`)
   }
 
   return (
@@ -27,5 +26,5 @@ export default async function PostsPage() {
         className="mt-4"
       />
     </div>
-  );
+  )
 }

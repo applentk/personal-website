@@ -1,14 +1,17 @@
 "use server"
 
 import prisma from "@/lib/prisma"
-import { Post } from "@/types/post";
+import { Post } from "@/types/post"
 
 export async function getAllPosts(includeDrafts = false) {
   return await prisma.post.findMany({
     where: {
       published: includeDrafts ? undefined : true
+    },
+    orderBy: {
+      updatedAt: "desc"
     }
-  });
+  })
 }
 
 export async function getPost(id: string) {
@@ -16,7 +19,7 @@ export async function getPost(id: string) {
     where: {
       id: id
     }
-  });
+  })
 }
 
 export async function createPost(data: Partial<Post> = {}) {
@@ -25,7 +28,7 @@ export async function createPost(data: Partial<Post> = {}) {
       title: data.title ?? "",
       content: data.content ?? ""
     }
-  });
+  })
 }
 
 export async function updatePost(id: string, data: Partial<Post>) {
@@ -37,7 +40,7 @@ export async function updatePost(id: string, data: Partial<Post>) {
       title: data.title ?? undefined,
       content: data.content ?? undefined
     }
-  });
+  })
 }
 
 export async function deletePost(id: string) {
@@ -45,5 +48,5 @@ export async function deletePost(id: string) {
     where: {
       id: id
     }
-  });
+  })
 }

@@ -1,7 +1,7 @@
 import { ReactNode } from "react"
 
-import { Sidebar } from "@/features/sidebar/components";
-import { sidebarItems } from "@/features/sidebar/constants";
+import { Sidebar } from "@/features/sidebar/components"
+import { sidebarItems } from "@/features/sidebar/constants"
 
 interface BackendLayoutProps {
   children: ReactNode
@@ -17,5 +17,5 @@ export default function BackendLayout({ children }: BackendLayoutProps) {
         { children }
       </div>
     </div>
-  );
+  )
 }

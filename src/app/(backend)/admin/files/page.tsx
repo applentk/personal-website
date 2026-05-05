@@ -1,8 +1,8 @@
-export default function NotFound() {
+export default function FilesPage() {
   return (
     <div>
       <h1 className="text-2xl font-bold">
-        Post not found
+        files
       </h1>
     </div>
   )

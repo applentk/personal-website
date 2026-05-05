@@ -2,6 +2,12 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@theme inline {
+  --font-sans: var(--outfit), system-ui, sans-serif;
+  --font-serif: var(--literata), serif;
+  --font-mono: var(--jetbrains-mono), monospace;
+}
+
 .ProseMirror {
   @apply outline-none;
 

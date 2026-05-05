@@ -1,15 +1,15 @@
 "use client"
 
-import Link from "next/link";
-import type { NavbarItem } from "./types";
-import { usePathname } from "next/navigation";
+import Link from "next/link"
+import type { NavbarItem } from "./types"
+import { usePathname } from "next/navigation"
 
 interface NavbarProps {
   items: NavbarItem[]
 }
 
 export function Navbar({ items }: NavbarProps) {
-  const path = usePathname();
+  const path = usePathname()
 
   return (
     <div className="w-full py-4">
@@ -27,5 +27,5 @@ export function Navbar({ items }: NavbarProps) {
         ) }
       </ul>
     </div>
-  );
+  )
 }

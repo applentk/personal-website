@@ -16,7 +16,7 @@ const COMMANDS: Command[] = [
   {
     title: "Heading 1",
     markdownQuery: "#",
-    icon: "H1",
+    icon: "h1",
     action: (editor, range) => {
       editor.chain().focus().deleteRange(range).setHeading({ level: 1 }).run()
     },
@@ -24,7 +24,7 @@ const COMMANDS: Command[] = [
   {
     title: "Heading 2",
     markdownQuery: "##",
-    icon: "H2",
+    icon: "h2",
     action: (editor, range) => {
       editor.chain().focus().deleteRange(range).setHeading({ level: 2 }).run()
     },
@@ -32,7 +32,7 @@ const COMMANDS: Command[] = [
   {
     title: "Heading 3",
     markdownQuery: "###",
-    icon: "H3",
+    icon: "h3",
     action: (editor, range) => {
       editor.chain().focus().deleteRange(range).setHeading({ level: 3 }).run()
     },
@@ -80,7 +80,7 @@ const COMMANDS: Command[] = [
   {
     title: "Image",
     markdownQuery: "image",
-    icon: "IMG",
+    icon: "img",
     action: (editor, range, postId) => {
       editor.chain().focus().deleteRange(range).run()
       const input = document.createElement("input")
@@ -89,17 +89,21 @@ const COMMANDS: Command[] = [
       input.onchange = async () => {
         const file = input.files?.[0]
         if (!file) return
+
         const formData = new FormData()
         formData.append("file", file)
         
-        const key = `posts/${postId}/${file.name}`
-        const url = await getUploadUrl(key, file.type);
+        const key = process.env.NODE_ENV === "production"
+          ? `posts/${file.name}`
+          : `posts/dev/${file.name}`
+        
+        const url = await getUploadUrl(key, file.type)
 
         await fetch(url, {
           method: "PUT",
           body: file,
           headers: { "Content-Type": file.type },
-        });
+        })
 
         const publicUrl = `${process.env.NEXT_PUBLIC_S3_PUBLIC_URL}/${key}`
         editor.chain().focus().insertContent({ type: "image", attrs: { src: publicUrl } }).run()

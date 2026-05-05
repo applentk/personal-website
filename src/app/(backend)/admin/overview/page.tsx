@@ -5,5 +5,5 @@ export default function AdminPage() {
         overview
       </h1>
     </div>
-  );
+  )
 }

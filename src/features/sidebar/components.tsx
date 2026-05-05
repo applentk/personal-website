@@ -1,16 +1,16 @@
 "use client"
 
-import Link from "next/link";
-import { SidebarItem } from "./type";
-import { usePathname } from "next/navigation";
-import { ComponentProps } from "react";
+import Link from "next/link"
+import { SidebarItem } from "./type"
+import { usePathname } from "next/navigation"
+import { ComponentProps } from "react"
 
 interface SidebarProps {
   items: SidebarItem[]
 }
 
 export function Sidebar({ items, className }: SidebarProps & ComponentProps<"nav">) {
-  const pathname = usePathname();
+  const pathname = usePathname()
 
   return (
     <nav className={`flex flex-col h-screen w-42 px-6 py-6 border-gray-500 ${ className }`}>
@@ -26,5 +26,5 @@ export function Sidebar({ items, className }: SidebarProps & ComponentProps<"nav
         ) }
       </ul>
     </nav>
-  ); 
+  ) 
 }

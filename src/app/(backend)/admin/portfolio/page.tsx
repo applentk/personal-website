@@ -5,5 +5,5 @@ export default function PortfolioPage() {
         portfolio
       </h1>
     </div>
-  );
+  )
 }
