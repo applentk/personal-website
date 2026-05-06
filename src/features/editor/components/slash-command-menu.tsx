@@ -1,7 +1,7 @@
 "use client"
 
 import { Editor } from "@tiptap/react"
-import { useEffect, useRef, useState, useCallback } from "react"
+import { useEffect, useRef, useState, useCallback, useMemo } from "react"
 import { slashCommandPluginKey } from "../extensions/slash-command"
 import FileSelectorDialog from "@/features/files/components/file-selector-dialog"
 
@@ -107,9 +107,9 @@ export default function SlashCommandMenu({ editor }: SlashCommandMenuProps) {
   const [imageDialogOpen, setImageDialogOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
 
-  const callbacks: CommandCallbacks = {
+  const callbacks = useMemo<CommandCallbacks>(() => ({
     onOpenImageDialog: () => setImageDialogOpen(true),
-  }
+  }), [])
 
   const filteredCommands = COMMANDS.filter(
     (cmd) =>
@@ -123,7 +123,7 @@ export default function SlashCommandMenu({ editor }: SlashCommandMenuProps) {
       if (!cmd) return
       cmd.action(editor, state.range, callbacks)
     },
-    [filteredCommands, editor, state.range]
+    [filteredCommands, editor, state.range, callbacks]
   )
 
   // Subscribe to plugin state changes
