@@ -2,8 +2,13 @@
 
 import prisma from "@/lib/prisma"
 import { Post } from "@/features/post/types"
+import { requireAuth } from "@/features/auth/queries"
 
 export async function getAllPosts(includeDrafts = false) {
+  if (includeDrafts) {
+    await requireAuth()
+  }
+
   return await prisma.post.findMany({
     where: {
       published: includeDrafts ? undefined : true
@@ -23,6 +28,8 @@ export async function getPost(id: string) {
 }
 
 export async function createPost(data: Partial<Post> = {}) {
+  await requireAuth()
+
   return await prisma.post.create({
     data: {
       title: data.title ?? "",
@@ -32,6 +39,8 @@ export async function createPost(data: Partial<Post> = {}) {
 }
 
 export async function updatePost(id: string, data: Partial<Post>) {
+  await requireAuth()
+
   return await prisma.post.update({
     where: {
       id: id
@@ -41,6 +50,8 @@ export async function updatePost(id: string, data: Partial<Post>) {
 }
 
 export async function deletePost(id: string) {
+  await requireAuth()
+
   return await prisma.post.delete({
     where: {
       id: id

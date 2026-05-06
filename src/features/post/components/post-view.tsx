@@ -2,8 +2,9 @@
 
 import { useEditor, EditorContent } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
-import Image from "@tiptap/extension-image"
+import * as TipTapImage from "@tiptap/extension-image"
 import type { Post } from "@/features/post/types"
+import Image from "next/image"
 
 interface PostViewProps {
   post: Post
@@ -11,7 +12,7 @@ interface PostViewProps {
 
 export default function PostView({ post }: PostViewProps) {
   const editor = useEditor({
-    extensions: [StarterKit, Image],
+    extensions: [StarterKit, TipTapImage.Image],
     content: JSON.parse(post.content || "{}"),
     editable: false,
     immediatelyRender: false,
@@ -29,10 +30,13 @@ export default function PostView({ post }: PostViewProps) {
       </div>
 
       {post.thumbnailUrl && (
-        <img
+        <Image
           src={post.thumbnailUrl}
           alt="Thumbnail"
+          loading="eager"
           className="w-full h-80 my-6 rounded-lg object-contain border border-gray-200"
+          width={640}
+          height={320}
         />
       )}
 

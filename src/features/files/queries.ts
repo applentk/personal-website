@@ -5,9 +5,12 @@ import { DeleteObjectCommand, ListObjectsV2Command, PutObjectCommand } from "@aw
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 
 import { File } from "./types"
+import { requireAuth } from "../auth/queries"
 
 // This is for client side upload URL generation
 export async function getUploadUrl(key: string, contentType: string) {
+    await requireAuth()
+  
   const command = new PutObjectCommand({
     Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
     Key: key,
@@ -19,6 +22,8 @@ export async function getUploadUrl(key: string, contentType: string) {
 }
 
 export async function getFiles(key: string = ""): Promise<File[]> {
+  await requireAuth()
+
   const command = new ListObjectsV2Command({
     Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
     Prefix: key,
@@ -33,19 +38,12 @@ export async function getFiles(key: string = ""): Promise<File[]> {
 }
 
 export async function deleteFile(key: string) {
+  await requireAuth()
+
   const command = new DeleteObjectCommand({
     Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
     Key: key,
   })
-
-  await s3.send(command);
-}
-
-export async function createFolder(folderName: string) {
-  const command = new PutObjectCommand({
-    Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
-    Key: `${folderName}/`,
-  });
 
   await s3.send(command);
 }
