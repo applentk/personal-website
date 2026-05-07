@@ -85,6 +85,7 @@ export default function PostEditor({ initialPost, onUpdate, className, ...props 
             <Image
               src={thumbnailUrl}
               alt="Thumbnail"
+              unoptimized
               loading="eager"
               className="w-full h-80 rounded-lg object-contain cursor-pointer border border-gray-200"
               width={640}

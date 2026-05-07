@@ -19,6 +19,7 @@ export default function FileCard({ file, onDelete }: FileCardProps) {
         {isImage ? (
           <Image
             src={file.url}
+            unoptimized
             alt={file.name}
             className="w-full h-40 object-contain bg-gray-50"
             width={512}
