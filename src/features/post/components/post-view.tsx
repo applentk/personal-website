@@ -5,12 +5,13 @@ import StarterKit from "@tiptap/starter-kit"
 import * as TipTapImage from "@tiptap/extension-image"
 import type { Post } from "@/features/post/types"
 import Image from "next/image"
+import { HTMLAttributes } from "react"
 
-interface PostViewProps {
+interface PostViewProps extends HTMLAttributes<HTMLDivElement> {
   post: Post
 }
 
-export default function PostView({ post }: PostViewProps) {
+export default function PostView({ post, ...props }: PostViewProps) {
   const editor = useEditor({
     extensions: [StarterKit, TipTapImage.Image],
     content: JSON.parse(post.content || "{}"),
@@ -19,7 +20,7 @@ export default function PostView({ post }: PostViewProps) {
   })
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-2xl mx-auto" {...props}>
       <h1 className="text-5xl font-semibold mb-2">{post.title}</h1>
 
       <div className="flex mb-6 font-serif">

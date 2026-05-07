@@ -2,7 +2,7 @@ import { ReactNode } from "react"
 
 import { Sidebar } from "@/features/sidebar/components/sidebar"
 import { sidebarItems } from "@/features/sidebar/constants"
-import { RequiredAuth } from "@/features/auth/component/RequiredAuth"
+import { RequiredAuth } from "@/features/auth/components/required-auth"
 
 interface BackendLayoutProps {
   children: ReactNode

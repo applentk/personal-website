@@ -5,7 +5,7 @@ export default async function PostPage() {
   const posts = await getAllPosts(false)
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col mt-20">
       <h1 className="text-3xl font-semibold self-center text-center">
         about me yapping about me
       </h1>

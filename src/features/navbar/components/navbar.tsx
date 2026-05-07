@@ -12,7 +12,7 @@ export function Navbar({ items }: NavbarProps) {
   const path = usePathname()
 
   return (
-    <div className="w-full py-4">
+    <div className="w-full py-4 fixed top-0 left-0 bg-white z-50">
       <ul className="flex justify-center gap-12">
         { items.map(({ label, href }) => 
           <li

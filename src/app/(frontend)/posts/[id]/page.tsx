@@ -14,5 +14,5 @@ export default async function PostIdPage({ searchParams }: PostIdPageProps) {
     notFound()
   }
 
-  return <PostView post={post} />
+  return <PostView post={post} className="mt-16" />
 }

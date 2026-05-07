@@ -1,7 +1,7 @@
 import FileCard from "@/features/files/components/file-card"
 import { deleteFile, getFiles } from "@/features/files/queries"
 import { FileUploadButton } from "@/features/files/components/file-upload-button"
-import { redirect } from "next/navigation"
+import { refresh } from "next/cache"
 
 export default async function FilesPage() {
   const files = await getFiles()
@@ -21,7 +21,7 @@ export default async function FilesPage() {
             onDelete={ async (file) => {
               "use server"
               await deleteFile(file.name);
-              redirect("/admin/files")
+              refresh();
             } }
           />
         ))}

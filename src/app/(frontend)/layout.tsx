@@ -11,9 +11,7 @@ export default function FrontendLayout({ children }: FrontendLayoutProps) {
   return (
     <div className="max-w-3xl mx-auto px-4">
       <Navbar items={ navbarItems } />
-      <div className="p-6">
-        { children }
-      </div>
+      { children }
     </div>
   )
 }
