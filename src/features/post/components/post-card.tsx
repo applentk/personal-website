@@ -16,6 +16,7 @@ export function PostCard({ post }: PostCardProps) {
         <Image
           src={post.thumbnailUrl}
           alt={post.title}
+          unoptimized
           width={400}
           height={225}
           className="w-full h-52 object-contain mb-2 rounded-lg border border-gray-300"
