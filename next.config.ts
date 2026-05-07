@@ -5,7 +5,8 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "cdn.applentk.com",
+        // eslint-disable-next-line @typescript-eslint/no-extra-non-null-assertion
+        hostname: process.env.NEXT_PUBLIC_S3_PUBLIC_URL!?.replace("https://", ""),
         port: "",
         pathname: "/**",
       },
