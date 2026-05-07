@@ -48,10 +48,6 @@ export default async function PostIdPage({ params }: PostIdPageProps) {
 
       <PostEditForm
         initialPost={ post }
-        onUpdate={ async (updatedPost) => {
-          "use server"
-          await updatePost(id, updatedPost)
-        } }
         className="my-4"
       />
     </div>

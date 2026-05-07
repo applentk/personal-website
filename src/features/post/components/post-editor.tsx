@@ -2,6 +2,7 @@
 
 import FileSelectorDialog from "@/features/files/components/file-selector-dialog"
 import TiptapEditor from "@/features/editor/components/tiptap-editor"
+import { updatePost } from "@/features/post/queries"
 import { Post } from "@/features/post/types"
 import { ImageIcon, X } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
@@ -9,35 +10,62 @@ import Image from "next/image"
 
 interface PostEditorProps extends React.HTMLAttributes<HTMLDivElement> {
   initialPost: Post
-  onUpdate?: (post: Post) => void
 }
 
-export default function PostEditor({ initialPost, onUpdate, className, ...props }: PostEditorProps) {
+export default function PostEditor({ initialPost, className, ...props }: PostEditorProps) {
   const [title, setTitle] = useState(initialPost.title)
   const [content, setContent] = useState(initialPost.content)
   const [thumbnailUrl, setThumbnailUrl] = useState(initialPost.thumbnailUrl)
+  const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "error">("idle")
 
   const [isFileSelectorOpen, setIsFileSelectorOpen] = useState(false)
-
-  const initialPostRef = useRef(initialPost)
-  const onUpdateRef = useRef(onUpdate)
+  const lastSavedRef = useRef({
+    title: initialPost.title,
+    content: initialPost.content,
+    thumbnailUrl: initialPost.thumbnailUrl,
+  })
+  const saveRequestIdRef = useRef(0)
 
   useEffect(() => {
-    onUpdateRef.current = onUpdate
-  }, [onUpdate])
+    const nextPostState = {
+      title,
+      content,
+      thumbnailUrl,
+    }
 
-  useEffect(() => {
+    if (
+      nextPostState.title === lastSavedRef.current.title &&
+      nextPostState.content === lastSavedRef.current.content &&
+      nextPostState.thumbnailUrl === lastSavedRef.current.thumbnailUrl
+    ) {
+      return
+    }
+
+    setSaveState("saving")
+
     const timer = setTimeout(() => {
-      onUpdateRef.current?.({
-        ...initialPostRef.current,
-        title,
-        content,
-        thumbnailUrl,
-      })
+      const requestId = ++saveRequestIdRef.current
+
+      void updatePost(initialPost.id, nextPostState)
+        .then(() => {
+          if (requestId !== saveRequestIdRef.current) {
+            return
+          }
+
+          lastSavedRef.current = nextPostState
+          setSaveState("saved")
+        })
+        .catch(() => {
+          if (requestId !== saveRequestIdRef.current) {
+            return
+          }
+
+          setSaveState("error")
+        })
     }, 500)
 
     return () => clearTimeout(timer)
-  }, [title, content, thumbnailUrl])
+  }, [content, initialPost.id, thumbnailUrl, title])
 
   return (
     <div className={`max-w-2xl mx-auto ${className}`} {...props}>
@@ -58,12 +86,17 @@ export default function PostEditor({ initialPost, onUpdate, className, ...props 
         className="w-full text-5xl font-semibold focus:outline-none placeholder:text-gray-300 placeholder:font-normal"
       />
 
-      <div className="flex">
+      <div className="flex mt-1">
         <span className="text-sm text-gray-500 after:content-['•'] after:mx-2">
           { initialPost.updatedAt.toLocaleDateString("en-UK", { month: "long", day: "numeric", year: "numeric" }) }
         </span>
-        <span className="text-sm text-gray-500">
+        <span className="text-sm text-gray-500 after:content-['•'] after:mx-2">
           { initialPost.views } views
+        </span>
+        <span className="text-sm text-gray-500">
+          {saveState === "saving" && "Saving..."}
+          {saveState === "saved" && "Saved"}
+          {saveState === "error" && "Save failed"}
         </span>
       </div>
 
