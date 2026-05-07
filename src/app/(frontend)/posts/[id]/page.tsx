@@ -1,14 +1,14 @@
 import PostView from "@/features/post/components/post-view"
-import { getPost } from "@/features/post/queries"
+import { getPublishedPost } from "@/features/post/queries"
 import { notFound } from "next/navigation"
 
 interface PostIdPageProps {
-  searchParams: Promise<{ id: string }>
+  params: Promise<{ id: string }>
 }
 
-export default async function PostIdPage({ searchParams }: PostIdPageProps) {
-  const { id } = await searchParams
-  const post = await getPost(id)
+export default async function PostIdPage({ params }: PostIdPageProps) {
+  const { id } = await params
+  const post = await getPublishedPost(id)
 
   if (!post) {
     notFound()

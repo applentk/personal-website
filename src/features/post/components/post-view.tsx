@@ -3,21 +3,42 @@
 import { useEditor, EditorContent } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
 import * as TipTapImage from "@tiptap/extension-image"
+import { incrementPublishedPostViews } from "@/features/post/queries"
 import type { Post } from "@/features/post/types"
 import Image from "next/image"
-import { HTMLAttributes } from "react"
+import { HTMLAttributes, useEffect, useRef, useState } from "react"
 
 interface PostViewProps extends HTMLAttributes<HTMLDivElement> {
   post: Post
 }
 
 export default function PostView({ post, ...props }: PostViewProps) {
+  const [viewCount, setViewCount] = useState(post.views)
+  const hasTrackedViewRef = useRef(false)
+
   const editor = useEditor({
     extensions: [StarterKit, TipTapImage.Image],
     content: JSON.parse(post.content || "{}"),
     editable: false,
     immediatelyRender: false,
   })
+
+  useEffect(() => {
+    if (hasTrackedViewRef.current) {
+      return
+    }
+
+    hasTrackedViewRef.current = true
+
+    incrementPublishedPostViews(post.id)
+      .then((views) => {
+        if (typeof views === "number") {
+          setViewCount(views)
+        }
+      })
+      .catch(() => { })
+      
+  }, [post.id])
 
   return (
     <div className="max-w-2xl mx-auto" {...props}>
@@ -27,7 +48,7 @@ export default function PostView({ post, ...props }: PostViewProps) {
         <span className="text-sm text-gray-500 after:content-['•'] after:mx-2">
           {post.updatedAt.toLocaleDateString("en-UK", { month: "long", day: "numeric", year: "numeric" })}
         </span>
-        <span className="text-sm text-gray-500">{post.views} views</span>
+        <span className="text-sm text-gray-500">{viewCount} views</span>
       </div>
 
       {post.thumbnailUrl && (

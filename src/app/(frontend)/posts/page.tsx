@@ -1,8 +1,8 @@
 import { PostCard } from "@/features/post/components/post-card"
-import { getAllPosts } from "@/features/post/queries"
+import { getPublishedPosts } from "@/features/post/queries"
 
 export default async function PostPage() {
-  const posts = await getAllPosts(false)
+  const posts = await getPublishedPosts()
 
   return (
     <div className="flex flex-col mt-20">
