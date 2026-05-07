@@ -1,15 +1,18 @@
 "use client"
 
 import type { File } from "@/features/files/types"
+import { LoaderCircleIcon } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
+import { useState } from "react"
 
 interface FileCardProps {
   file: File
-  onDelete?: (file: File) => void
+  onDelete?: (file: File) => Promise<void>
 }
 
 export default function FileCard({ file, onDelete }: FileCardProps) {
+  const [isDeleting, setIsDeleting] = useState(false)
   const extension = file.name.split(".").pop()?.toLowerCase()
   const isImage = extension && ["jpg", "jpeg", "png", "gif"].includes(extension)
 
@@ -40,13 +43,16 @@ export default function FileCard({ file, onDelete }: FileCardProps) {
           
           { onDelete && (
             <button
-              onClick={(e) => {
+              onClick={async (e) => {
                 e.preventDefault()
-                onDelete?.(file)
+                setIsDeleting(true)
+                await onDelete?.(file)
+                setIsDeleting(false)
               }}
-              className="px-2 m-2 text-sm text-red-500 border border-red-500 hover:underline"
+              disabled={isDeleting}
+              className="px-2 m-2 text-sm text-red-500 border border-red-500 rounded-sm hover:underline"
             >
-              del
+              {isDeleting ? <LoaderCircleIcon className="animate-spin size-5 py-1" /> : "del"}
             </button>
           ) }
         </div>

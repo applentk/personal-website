@@ -12,7 +12,11 @@ export default async function FilesPage() {
 
       <div className="grid grid-cols-4 gap-2 mt-4">
         <FileUploadButton
-          className="px-2 py-1 border border-gray-300 rounded-lg text-gray-400 hover:cursor-default hover:text-gray-700"
+          className="px-2 py-1 flex items-center justify-center border border-gray-300 rounded-lg text-gray-400 hover:cursor-default hover:text-gray-700"
+          onFileUploaded={async () => {
+            "use server"
+            refresh()
+          }}
         />
         {files.map((file) => (
           <FileCard

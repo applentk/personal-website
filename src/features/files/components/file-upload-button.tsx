@@ -3,7 +3,8 @@
 import type { File as FFile } from "@/features/files/types"
 import FilePickerButton from "@/features/files/components/file-picker-button"
 import { getUploadUrl } from "@/features/files/queries"
-import { ButtonHTMLAttributes } from "react"
+import { ButtonHTMLAttributes, useState } from "react"
+import { LoaderCircleIcon } from "lucide-react"
 
 interface FileUploadButtonPropsMultiple extends ButtonHTMLAttributes<HTMLButtonElement> {
   multiple: true
@@ -18,7 +19,11 @@ interface FileUploadButtonPropsSingle extends ButtonHTMLAttributes<HTMLButtonEle
 type FileUploadButtonProps = FileUploadButtonPropsMultiple | FileUploadButtonPropsSingle
 
 export function FileUploadButton({ onFileUploaded, multiple, ...props }: FileUploadButtonProps) {
+  const [isUploading, setIsUploading] = useState(false)
+  
   async function handleFileSelected(files: File[] | File) {
+    setIsUploading(true)
+
     await Promise.all(
       (Array.isArray(files) ? files : [files]).map(async (file) => {
         const url = await getUploadUrl(file.name, file.type)
@@ -30,6 +35,8 @@ export function FileUploadButton({ onFileUploaded, multiple, ...props }: FileUpl
       })
     )
 
+    setIsUploading(false)
+
     const uploadedFiles = (Array.isArray(files) ? files : [files]).map((file) => ({
       name: file.name,
       url: `${process.env.NEXT_PUBLIC_S3_PUBLIC_URL}/${file.name}`,
@@ -40,16 +47,17 @@ export function FileUploadButton({ onFileUploaded, multiple, ...props }: FileUpl
     }
     else {
       onFileUploaded?.(uploadedFiles[0])
-    }
+    }    
   }
 
   return (
     <FilePickerButton
       multiple={multiple}
-      onFileSelected={ handleFileSelected }
+      onFileSelected={handleFileSelected}
+      disabled={isUploading}
       {...props}
     >
-      upload file
+      {isUploading ? <LoaderCircleIcon className="animate-spin" /> : "upload file"}
     </FilePickerButton>
   )
 }
