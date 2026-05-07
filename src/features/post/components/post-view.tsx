@@ -15,6 +15,7 @@ interface PostViewProps extends HTMLAttributes<HTMLDivElement> {
 export default function PostView({ post, ...props }: PostViewProps) {
   const [viewCount, setViewCount] = useState(post.views)
   const hasTrackedViewRef = useRef(false)
+  const viewedSessionKey = `post:viewed:${post.id}`
 
   const editor = useEditor({
     extensions: [StarterKit, TipTapImage.Image],
@@ -28,17 +29,27 @@ export default function PostView({ post, ...props }: PostViewProps) {
       return
     }
 
+    if (sessionStorage.getItem(viewedSessionKey) === "1") {
+      hasTrackedViewRef.current = true
+      return
+    }
+    
+    sessionStorage.setItem(viewedSessionKey, "pending")
     hasTrackedViewRef.current = true
 
-    incrementPublishedPostViews(post.id)
+    void incrementPublishedPostViews(post.id)
       .then((views) => {
         if (typeof views === "number") {
           setViewCount(views)
         }
+
+        sessionStorage.setItem(viewedSessionKey, "1")
       })
-      .catch(() => { })
+      .catch(() => {
+        sessionStorage.removeItem(viewedSessionKey)
+      })
       
-  }, [post.id])
+  }, [post.id, viewedSessionKey])
 
   return (
     <div className="max-w-2xl mx-auto" {...props}>
