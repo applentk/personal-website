@@ -17,6 +17,7 @@ export function PostCard({ post }: PostCardProps) {
           src={post.thumbnailUrl}
           alt={post.title}
           unoptimized
+          loading="eager"
           width={400}
           height={225}
           className="w-full h-52 object-contain mb-2 rounded-lg border border-gray-300"
@@ -33,10 +34,9 @@ export function PostCard({ post }: PostCardProps) {
       </h1>
       
       <p className="text-gray-500 font-serif">
-        <span className="text-sm text-gray-500 after:content-['•'] after:mx-2">
+        <span className="text-sm text-gray-500">
           {post.updatedAt.toLocaleDateString("en-UK", { month: "long", day: "numeric", year: "numeric" })}
         </span>
-        <span className="text-sm text-gray-500">{post.views} views</span>
       </p>
     </Link>
   )

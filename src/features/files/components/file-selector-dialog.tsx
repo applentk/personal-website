@@ -41,7 +41,7 @@ export default function FileSelectorDialog({ open, onClose, onSelect }: FileSele
       <div className="grid grid-cols-4 gap-2 max-h-[60vh] overflow-y-auto">
         <FileUploadButton
           multiple={false}
-          className="px-2 py-1 border border-gray-300 text-gray-400 hover:cursor-default"
+          className="px-2 py-1 border border-gray-300 h-49.5 rounded-lg text-gray-400 hover:cursor-default"
           onFileUploaded={handleSelect}
         />
         {files.map((file) => (
