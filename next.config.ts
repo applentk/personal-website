@@ -7,13 +7,9 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "cdn.applentk.com",
         pathname: "/**"
-      },
-      {
-        protocol: "https",
-        hostname: "pub-22c8d20aa6f24b3895a2cdb65854b43f.r2.dev",
-        pathname: "/**"
       }
     ],
+    unoptimized: true,
   }
 };
 
