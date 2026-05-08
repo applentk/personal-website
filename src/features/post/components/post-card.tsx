@@ -16,7 +16,6 @@ export function PostCard({ post }: PostCardProps) {
         <Image
           src={post.thumbnailUrl}
           alt={post.title}
-          unoptimized
           loading="eager"
           width={400}
           height={225}

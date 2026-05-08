@@ -65,7 +65,6 @@ export default function PostView({ post, ...props }: PostViewProps) {
       {post.thumbnailUrl && (
         <Image
           src={post.thumbnailUrl}
-          unoptimized
           alt="Thumbnail"
           loading="eager"
           className="w-full h-80 my-6 rounded-lg object-contain border border-gray-200"
