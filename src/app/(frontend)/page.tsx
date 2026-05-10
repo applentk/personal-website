@@ -10,7 +10,7 @@ export default function HomePage() {
             className="group-hover:opacity-0"
           />
         </div>
-        <div className="absolute size-full flex justify-center items-center gap-2 cursor-default">
+        <div className="absolute size-full flex justify-center items-center gap-2 cursor-default max-md:flex-col px-6">
           <div className="flex flex-col">
             <h1 className="opacity-0 group-hover:opacity-100 text-xl">
               hey there
