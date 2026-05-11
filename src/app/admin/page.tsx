@@ -41,7 +41,7 @@ export default async function AdminPage() {
           type="submit"
           className="w-full py-2 border font-semibold rounded-md hover:bg-gray-50 transition-colors"
         >
-          let&aposs go
+          let&apos;s go
         </button>
       </form>
     </div>
