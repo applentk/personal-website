@@ -62,9 +62,9 @@ export function PostView({ post, ...props }: PostViewProps) {
         <span className="text-sm text-gray-500">{viewCount} views</span>
       </div>
 
-      {post.thumbnailUrl && (
+      {post.thumbnail && (
         <Image
-          src={post.thumbnailUrl}
+          src={post.thumbnail.url}
           alt="Thumbnail"
           loading="eager"
           className="w-full h-80 my-6 rounded-lg object-contain border border-gray-200"

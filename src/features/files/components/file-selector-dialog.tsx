@@ -2,19 +2,19 @@
 
 import { useEffect, useRef, useState } from "react"
 import { getFiles } from "@/features/files/queries"
-import type { File } from "@/features/files/types"
+import type { ObjectStorageFile } from "@/features/files/types"
 import FileCard from "@/features/files/components/file-card"
 import { FileUploadButton } from "./file-upload-button"
 
 interface FileSelectorDialogProps {
   open: boolean
   onClose: () => void
-  onSelect: (file: File) => void
+  onSelect: (file: ObjectStorageFile) => void
 }
 
 export default function FileSelectorDialog({ open, onClose, onSelect }: FileSelectorDialogProps) {
   const ref = useRef<HTMLDialogElement>(null)
-  const [files, setFiles] = useState<File[]>([])
+  const [files, setFiles] = useState<ObjectStorageFile[]>([])
 
   useEffect(() => {
     if (open) {
@@ -26,7 +26,7 @@ export default function FileSelectorDialog({ open, onClose, onSelect }: FileSele
     }
   }, [open])
 
-  function handleSelect(file: File) {
+  function handleSelect(file: ObjectStorageFile) {
     onSelect(file)
     onClose()
   }

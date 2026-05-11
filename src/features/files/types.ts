@@ -1,4 +1,6 @@
-export type File = {
+export type ObjectStorageFile = {
+  id: string
   name: string
-  url:  string
+  url: string
+  createdAt: Date
 }

@@ -8,6 +8,7 @@ export async function getAllPosts() {
   await requireAuth()
 
   return await prisma.post.findMany({
+    include: { thumbnail: true },
     orderBy: {
       updatedAt: "desc"
     }
@@ -16,29 +17,23 @@ export async function getAllPosts() {
 
 export async function getPost(id: string) {
   return await prisma.post.findFirst({
-    where: {
-      id: id
-    }
+    where: { id },
+    include: { thumbnail: true },
   })
 }
 
 export async function getPublishedPosts() {
   return await prisma.post.findMany({
-    where: {
-      published: true,
-    },
-    orderBy: {
-      updatedAt: "desc"
-    }
+    where: { published: true },
+    include: { thumbnail: true },
+    orderBy: { updatedAt: "desc" },
   })
 }
 
 export async function getPublishedPost(id: string) {
   return await prisma.post.findFirst({
-    where: {
-      id: id,
-      published: true,
-    }
+    where: { id, published: true },
+    include: { thumbnail: true },
   })
 }
 
@@ -77,8 +72,8 @@ export async function createPost(data: Partial<Post> = {}) {
 
   return await prisma.post.create({
     data: {
-      title: data.title ?? "",
-      content: data.content ?? "",
+      title: data.title,
+      content: data.content,
     }
   })
 }
@@ -86,11 +81,18 @@ export async function createPost(data: Partial<Post> = {}) {
 export async function updatePost(id: string, data: Partial<Post>) {
   await requireAuth()
 
+  const { thumbnail, ...scalarData } = data
+
   return await prisma.post.update({
-    where: {
-      id: id
+    where: { id },
+    data: {
+      ...scalarData,
+      ...(thumbnail !== undefined && {
+        thumbnail: thumbnail
+          ? { connect: { id: thumbnail.id } }
+          : { disconnect: true },
+      }),
     },
-    data: data
   })
 }
 

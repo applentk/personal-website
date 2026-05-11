@@ -1,19 +1,19 @@
 "use client"
 
-import type { File as FFile } from "@/features/files/types"
+import type { ObjectStorageFile } from "@/features/files/types"
 import FilePickerButton from "@/features/files/components/file-picker-button"
-import { getUploadUrl } from "@/features/files/queries"
+import { getUploadUrl, saveFile } from "@/features/files/queries"
 import { ButtonHTMLAttributes, useState } from "react"
 import { LoaderCircleIcon } from "lucide-react"
 
 interface FileUploadButtonPropsMultiple extends ButtonHTMLAttributes<HTMLButtonElement> {
   multiple: true
-  onFileUploaded?: (file: FFile[]) => void
+  onFileUploaded?: (file: ObjectStorageFile[]) => void
 }
 
 interface FileUploadButtonPropsSingle extends ButtonHTMLAttributes<HTMLButtonElement> {
   multiple?: false
-  onFileUploaded?: (file: FFile) => void
+  onFileUploaded?: (file: ObjectStorageFile) => void
 }
 
 type FileUploadButtonProps = FileUploadButtonPropsMultiple | FileUploadButtonPropsSingle
@@ -41,13 +41,15 @@ export function FileUploadButton({ onFileUploaded, multiple, ...props }: FileUpl
       name: file.name,
       url: `${process.env.NEXT_PUBLIC_S3_PUBLIC_URL}/${file.name}`,
     }))
+    
+    const savedFiles = await Promise.all(uploadedFiles.map((file) => saveFile(file)));
 
     if (multiple) {
-      onFileUploaded?.(uploadedFiles)
+      onFileUploaded?.(savedFiles)
     }
     else {
-      onFileUploaded?.(uploadedFiles[0])
-    }    
+      onFileUploaded?.(savedFiles[0])
+    }
   }
 
   return (

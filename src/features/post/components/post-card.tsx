@@ -12,10 +12,10 @@ interface PostCardProps {
 export function PostCard({ post }: PostCardProps) {
   return (
     <Link href={`/posts/${post.id}`} className="block p-2 group cursor-default">
-      {post.thumbnailUrl ? (
+      {post.thumbnail ? (
         <Image
-          src={post.thumbnailUrl}
-          alt={post.title}
+          src={post.thumbnail.url}
+          alt={post.title ?? ""}
           loading="eager"
           width={400}
           height={225}

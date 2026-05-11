@@ -23,7 +23,7 @@ export default async function PostsPage() {
       </div>
       
       <PostTable
-        posts={ posts }
+        posts={posts}
         className="mt-4"
       />
     </div>

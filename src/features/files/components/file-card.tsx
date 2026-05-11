@@ -1,14 +1,14 @@
 "use client"
 
-import type { File } from "@/features/files/types"
+import type { ObjectStorageFile } from "@/features/files/types"
 import { LoaderCircleIcon } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
 
 interface FileCardProps {
-  file: File
-  onDelete?: (file: File) => Promise<void>
+  file: ObjectStorageFile
+  onDelete?: (file: ObjectStorageFile) => Promise<void>
 }
 
 export default function FileCard({ file, onDelete }: FileCardProps) {

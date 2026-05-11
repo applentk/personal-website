@@ -15,14 +15,14 @@ interface PostEditorProps extends React.HTMLAttributes<HTMLDivElement> {
 export default function PostEditor({ initialPost, className, ...props }: PostEditorProps) {
   const [title, setTitle] = useState(initialPost.title)
   const [content, setContent] = useState(initialPost.content)
-  const [thumbnailUrl, setThumbnailUrl] = useState(initialPost.thumbnailUrl)
+  const [thumbnail, setThumbnail] = useState(initialPost.thumbnail)
   const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "error">("idle")
 
   const [isFileSelectorOpen, setIsFileSelectorOpen] = useState(false)
   const lastSavedRef = useRef({
     title: initialPost.title,
     content: initialPost.content,
-    thumbnailUrl: initialPost.thumbnailUrl,
+    thumbnail: initialPost.thumbnail,
   })
   const saveRequestIdRef = useRef(0)
 
@@ -30,42 +30,35 @@ export default function PostEditor({ initialPost, className, ...props }: PostEdi
     const nextPostState = {
       title,
       content,
-      thumbnailUrl,
+      thumbnail: thumbnail,
     }
 
-    if (
-      nextPostState.title === lastSavedRef.current.title &&
-      nextPostState.content === lastSavedRef.current.content &&
-      nextPostState.thumbnailUrl === lastSavedRef.current.thumbnailUrl
-    ) {
-      return
-    }
+    if (nextPostState.title === lastSavedRef.current.title &&
+        nextPostState.content === lastSavedRef.current.content &&
+        nextPostState.thumbnail?.id === lastSavedRef.current.thumbnail?.id) return
 
     setSaveState("saving")
 
-    const timer = setTimeout(() => {
+    const timer = setTimeout(async () => {
       const requestId = ++saveRequestIdRef.current
 
-      void updatePost(initialPost.id, nextPostState)
-        .then(() => {
-          if (requestId !== saveRequestIdRef.current) {
-            return
-          }
+      try {
+        await updatePost(initialPost.id, nextPostState)
 
+        if (requestId === saveRequestIdRef.current) {
           lastSavedRef.current = nextPostState
           setSaveState("saved")
-        })
-        .catch(() => {
-          if (requestId !== saveRequestIdRef.current) {
-            return
-          }
-
+        }
+      }
+      catch {
+        if (requestId === saveRequestIdRef.current) { 
           setSaveState("error")
-        })
+        }
+      }
     }, 500)
 
     return () => clearTimeout(timer)
-  }, [content, initialPost.id, thumbnailUrl, title])
+  }, [content, initialPost.id, thumbnail, title])
 
   return (
     <div className={`max-w-2xl mx-auto ${className}`} {...props}>
@@ -73,7 +66,7 @@ export default function PostEditor({ initialPost, className, ...props }: PostEdi
         open={isFileSelectorOpen}
         onClose={() => setIsFileSelectorOpen(false)}
         onSelect={(file) => {
-          setThumbnailUrl(file.url)
+          setThumbnail(file)
         }}
       />
 
@@ -81,34 +74,36 @@ export default function PostEditor({ initialPost, className, ...props }: PostEdi
         id="title"
         type="text"
         placeholder="Title"
-        defaultValue={ initialPost.title }
+        defaultValue={ initialPost.title ?? "" }
         onChange={ (e) => setTitle(e.target.value) }
         className="w-full text-5xl font-semibold focus:outline-none placeholder:text-gray-300 placeholder:font-normal"
       />
 
-      <div className="flex mt-1">
+      <div className="flex mt-1 items-center font-serif">
         <span className="text-sm text-gray-500 after:content-['•'] after:mx-2">
           { initialPost.updatedAt.toLocaleDateString("en-UK", { month: "long", day: "numeric", year: "numeric" }) }
         </span>
-        <span className="text-sm text-gray-500 after:content-['•'] after:mx-2">
+        <span className="text-sm text-gray-500">
           { initialPost.views } views
         </span>
-        <span className="text-sm text-gray-500">
-          {saveState === "saving" && "Saving..."}
-          {saveState === "saved" && "Saved"}
-          {saveState === "error" && "Save failed"}
-        </span>
+        { saveState !== "idle" && (
+          <span className="text-sm text-gray-500 before:content-['•'] before:mx-2">
+            {saveState === "saving" && "Saving..."}
+            {saveState === "saved" && "Saved"}
+            {saveState === "error" && "Save failed"}
+          </span>
+        ) }
       </div>
 
       <div onClick={ () => setIsFileSelectorOpen(true) } className="group">
-        { thumbnailUrl ? (
+        { thumbnail ? (
           <div className="relative my-6">
             <button
               type="button"
               aria-label="Remove thumbnail"
               onClick={ (e) => {
                 e.stopPropagation()
-                setThumbnailUrl(null)
+                setThumbnail(null)
               } }
               className="absolute top-3 right-3 z-10 inline-flex p-1 items-center justify-center rounded-full border border-gray-200 bg-white/90 text-gray-500 shadow-sm transition hover:text-gray-900"
             >
@@ -116,7 +111,7 @@ export default function PostEditor({ initialPost, className, ...props }: PostEdi
             </button>
 
             <Image
-              src={thumbnailUrl}
+              src={thumbnail.url}
               alt="Thumbnail"
               loading="eager"
               className="w-full h-80 rounded-lg object-contain cursor-pointer border border-gray-200"

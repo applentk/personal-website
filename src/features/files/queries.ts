@@ -1,11 +1,12 @@
 "use server"
 
 import s3 from "@/lib/s3"
-import { DeleteObjectCommand, ListObjectsV2Command, PutObjectCommand } from "@aws-sdk/client-s3"
+import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3"
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 
-import { File } from "./types"
+import { ObjectStorageFile } from "./types"
 import { requireAuth } from "../auth/queries"
+import prisma from "@/lib/prisma"
 
 // This is for client side upload URL generation
 export async function getUploadUrl(key: string, contentType: string) {
@@ -21,20 +22,31 @@ export async function getUploadUrl(key: string, contentType: string) {
   return url
 }
 
-export async function getFiles(key: string = ""): Promise<File[]> {
+export async function getFiles(key: string = ""): Promise<ObjectStorageFile[]> {
   await requireAuth()
 
-  const command = new ListObjectsV2Command({
-    Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
-    Prefix: key,
+  const files = await prisma.objectStorageFile.findMany({
+    where: {
+      name: {
+        startsWith: key,
+      },
+    },
   })
 
-  const response = await s3.send(command)
+  return files as ObjectStorageFile[]
+}
 
-  return response.Contents?.map((item) => ({
-    name: item.Key!,
-    url: `${process.env.NEXT_PUBLIC_S3_PUBLIC_URL}/${item.Key!}`,
-  })) || [] 
+export async function saveFile(file: { name: string; url: string }) {
+  await requireAuth()
+
+  const newFile = await prisma.objectStorageFile.create({
+    data: {
+      name: file.name,
+      url: file.url,
+    },
+  })
+
+  return newFile as ObjectStorageFile
 }
 
 export async function deleteFile(key: string) {
@@ -46,4 +58,10 @@ export async function deleteFile(key: string) {
   })
 
   await s3.send(command)
+
+  await prisma.objectStorageFile.deleteMany({
+    where: {
+      name: key,
+    },
+  })
 }
