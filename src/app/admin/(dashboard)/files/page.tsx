@@ -24,8 +24,8 @@ export default async function FilesPage() {
             file={file}
             onDelete={ async (file) => {
               "use server"
-              await deleteFile(file.name);
-              refresh();
+              await deleteFile(file.name)
+              refresh()
             } }
           />
         ))}

@@ -15,23 +15,23 @@ export async function createSession() {
     .setExpirationTime("12h")
     .sign(encodedSecret)
 
-  const cookieStore = await cookies();
+  const cookieStore = await cookies()
   cookieStore.set("session", session, {
     httpOnly: true,
     secure: true,
     expires: new Date(Date.now() + 12 * 60 * 60 * 1000), // 12 hours
     sameSite: "lax",
     path: "/",
-  });
+  })
 }
 
 export async function clearSession() {
-  const cookieStore = await cookies();
-  cookieStore.delete("session");
+  const cookieStore = await cookies()
+  cookieStore.delete("session")
 }
 
 export async function isValidSession() {
-  const cookieStore = await cookies();
+  const cookieStore = await cookies()
   const session = cookieStore.get("session")?.value
 
   if (!session) {

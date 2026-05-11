@@ -1,5 +1,5 @@
-import Apple3D from "@/features/home/components/apple-3d";
-import Image from "next/image";
+import Apple3D from "@/features/home/components/apple-3d"
+import Image from "next/image"
 
 export default function HomePage() {
   return (
@@ -16,7 +16,7 @@ export default function HomePage() {
               hey there
             </h1>
             <h2 className="opacity-0 delay-0 group-hover:opacity-100 group-hover:delay-1000 text-2xl font-semibold">
-              I&apos;m Nonthakorn Srichai
+              I&aposm Nonthakorn Srichai
             </h2>
             <p className="mt-2 opacity-0 delay-0 group-hover:opacity-100 group-hover:delay-2000 text-sm font-serif text-gray-600">
               a KMITL student who interests in Computer Graphics, Web Development and Android Development

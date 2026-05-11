@@ -1,19 +1,19 @@
-import { isAuthorized, signIn } from "@/features/auth/queries";
-import { redirect } from "next/navigation";
+import { isAuthorized, signIn } from "@/features/auth/queries"
+import { redirect } from "next/navigation"
 
 export default async function AdminPage() {
   if (await isAuthorized()) {
-    redirect("/admin/overview");
+    redirect("/admin/overview")
   }
 
   async function handleSubmit(formData: FormData) {
     "use server"
 
-    const username = formData.get("username") as string;
-    const password = formData.get("password") as string;
+    const username = formData.get("username") as string
+    const password = formData.get("password") as string
     
-    await signIn(username, password);
-    redirect("/admin/overview");
+    await signIn(username, password)
+    redirect("/admin/overview")
   }
 
   return (
@@ -41,7 +41,7 @@ export default async function AdminPage() {
           type="submit"
           className="w-full py-2 border font-semibold rounded-md hover:bg-gray-50 transition-colors"
         >
-          let&apos;s go
+          let&aposs go
         </button>
       </form>
     </div>

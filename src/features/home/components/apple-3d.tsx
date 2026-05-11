@@ -34,7 +34,7 @@ export default function Apple3D({ ...props }: HTMLAttributes<HTMLDivElement>) {
       appleModel.rotateX(0.3)
       appleModel.scale.set(5, 5, 5)
       scene.add(appleModel)
-    });
+    })
 
     function randomSpeed(): number {
       const pos = [-1, 1]

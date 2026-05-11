@@ -40,7 +40,7 @@ export function FileUploadButton({ onFileUploaded, multiple, ...props }: FileUpl
     const uploadedFiles = (Array.isArray(files) ? files : [files]).map((file) => ({
       name: file.name,
       url: `${process.env.NEXT_PUBLIC_S3_PUBLIC_URL}/${file.name}`,
-    }));
+    }))
 
     if (multiple) {
       onFileUploaded?.(uploadedFiles)

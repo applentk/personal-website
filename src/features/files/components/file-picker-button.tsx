@@ -1,5 +1,5 @@
-import { pickFile, pickFiles } from "@/utils/file";
-import { ButtonHTMLAttributes } from "react";
+import { pickFile, pickFiles } from "@/utils/file"
+import { ButtonHTMLAttributes } from "react"
 
 interface FilePickerButtonPropsMultiple extends ButtonHTMLAttributes<HTMLButtonElement> {
   multiple: true

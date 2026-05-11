@@ -45,5 +45,5 @@ export async function deleteFile(key: string) {
     Key: key,
   })
 
-  await s3.send(command);
+  await s3.send(command)
 }

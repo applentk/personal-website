@@ -1,16 +1,16 @@
-import { ReactNode } from "react";
-import { isAuthorized } from "../queries";
-import { redirect } from "next/navigation";
+import { ReactNode } from "react"
+import { isAuthorized } from "../queries"
+import { redirect } from "next/navigation"
 
 interface RequiredAuthProps {
-  signInUrl: string;
+  signInUrl: string
   children: ReactNode
 }
 
 export async function RequiredAuth({ signInUrl, children }: RequiredAuthProps) {
   if (!await isAuthorized()) {
-    redirect(signInUrl);
+    redirect(signInUrl)
   }
 
-  return children;
+  return children
 }
