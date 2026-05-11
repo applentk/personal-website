@@ -1,7 +1,9 @@
 import type { Metadata } from "next"
 import { JetBrains_Mono, Literata, Outfit, } from "next/font/google"
 import { ReactNode } from "react"
+
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@vercel/analytics/next"
 
 import "@/styles/globals.css"
 
@@ -38,7 +40,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <body className="min-h-full">
         { children }
       </body>
+      
       <SpeedInsights />
+      <Analytics />
     </html>
   )
 }
