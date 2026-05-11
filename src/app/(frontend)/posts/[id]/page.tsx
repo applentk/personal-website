@@ -1,4 +1,4 @@
-import PostView from "@/features/post/components/post-view"
+import { PostView } from "@/features/post/components/post-view"
 import { getPublishedPost } from "@/features/post/queries"
 import { notFound } from "next/navigation"
 

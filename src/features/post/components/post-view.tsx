@@ -12,7 +12,7 @@ interface PostViewProps extends HTMLAttributes<HTMLDivElement> {
   post: Post
 }
 
-export default function PostView({ post, ...props }: PostViewProps) {
+export function PostView({ post, ...props }: PostViewProps) {
   const [viewCount, setViewCount] = useState(post.views)
   const hasTrackedViewRef = useRef(false)
   const viewedSessionKey = `post:viewed:${post.id}`
@@ -74,6 +74,30 @@ export default function PostView({ post, ...props }: PostViewProps) {
       )}
 
       <EditorContent editor={editor} className="font-serif" />
+    </div>
+  )
+}
+
+export function PostViewSkeleton({ ...props }: HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div className="max-w-2xl mx-auto animate-pulse" {...props}>
+      {/* Title */}
+      <div className="h-12 bg-gray-200 rounded-md w-3/4 mb-3" />
+      {/* Date / views */}
+      <div className="flex gap-2 mb-6">
+        <div className="h-4 bg-gray-200 rounded w-32" />
+        <div className="h-4 bg-gray-200 rounded w-16" />
+      </div>
+
+      {/* Thumbnail */}
+      <div className="w-full h-80 bg-gray-200 rounded-lg mb-6" />
+      {/* Body paragraphs */}
+      <div className="space-y-3">
+        <div className="h-4 bg-gray-200 rounded w-full" />
+        <div className="h-4 bg-gray-200 rounded w-full" />
+        <div className="h-4 bg-gray-200 rounded w-5/6" />
+        <div className="h-4 bg-gray-200 rounded w-full" />
+      </div>
     </div>
   )
 }
