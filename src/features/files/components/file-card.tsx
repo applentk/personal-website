@@ -23,6 +23,7 @@ export default function FileCard({ file, onDelete }: FileCardProps) {
           <Image
             src={file.url}
             alt={file.name}
+            loading="eager"
             className="w-full h-40 object-contain bg-gray-50"
             width={512}
             height={512}
