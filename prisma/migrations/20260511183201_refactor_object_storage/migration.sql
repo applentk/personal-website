@@ -4,17 +4,6 @@
   - You are about to drop the column `thumbnailUrl` on the `Post` table. All the data in the column will be lost.
 
 */
--- Migrate existing thumbnailUrl data into ObjectStorageFile before dropping the column
-INSERT INTO "ObjectStorageFile" ("id", "name", "url", "postId", "createdAt")
-SELECT
-  gen_random_uuid()::TEXT,
-  SUBSTRING("thumbnailUrl" FROM '[^/]+$'),
-  "thumbnailUrl",
-  "id",
-  NOW()
-FROM "Post"
-WHERE "thumbnailUrl" IS NOT NULL;
-
 -- AlterTable
 ALTER TABLE "Post" DROP COLUMN "thumbnailUrl",
 ALTER COLUMN "title" DROP NOT NULL;
