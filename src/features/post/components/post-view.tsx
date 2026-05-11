@@ -78,9 +78,9 @@ export function PostView({ post, ...props }: PostViewProps) {
   )
 }
 
-export function PostViewSkeleton({ ...props }: HTMLAttributes<HTMLDivElement>) {
+export function PostViewSkeleton({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className="max-w-2xl mx-auto animate-pulse" {...props}>
+    <div className={`max-w-2xl mx-auto animate-pulse ${className}`} {...props}>
       {/* Title */}
       <div className="h-12 bg-gray-200 rounded-md w-3/4 mb-3" />
       {/* Date / views */}
@@ -93,8 +93,8 @@ export function PostViewSkeleton({ ...props }: HTMLAttributes<HTMLDivElement>) {
       <div className="w-full h-80 bg-gray-200 rounded-lg mb-6" />
       {/* Body paragraphs */}
       <div className="space-y-3">
-        <div className="h-4 bg-gray-200 rounded w-full" />
-        <div className="h-4 bg-gray-200 rounded w-full" />
+        <div className="h-4 bg-gray-200 rounded w-1/2" />
+        <div className="h-4 bg-gray-200 rounded w-4/5" />
         <div className="h-4 bg-gray-200 rounded w-5/6" />
         <div className="h-4 bg-gray-200 rounded w-full" />
       </div>
