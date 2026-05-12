@@ -8,7 +8,7 @@ export default async function FilesPage() {
 
   return (
     <div className="flex flex-col gap-2">
-      <h1 className="text-xl">files</h1>
+      <h1 className="text-lg">files</h1>
 
       <div className="grid grid-cols-4 gap-2 mt-4">
         <FileUploadButton

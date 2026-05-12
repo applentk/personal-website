@@ -23,6 +23,7 @@ model Work {
   title         String?
   description   String?
   repositoryUrl String?
+  technologies  String[]
   published     Boolean             @default(false)
   createdAt     DateTime            @default(now())
   updatedAt     DateTime            @default(now()) @updatedAt

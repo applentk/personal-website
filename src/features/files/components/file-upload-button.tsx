@@ -59,7 +59,7 @@ export function FileUploadButton({ onFileUploaded, multiple, ...props }: FileUpl
       disabled={isUploading}
       {...props}
     >
-      {isUploading ? <LoaderCircleIcon className="animate-spin" /> : "upload file"}
+      {isUploading ? <span className="flex items-center justify-center"><LoaderCircleIcon className="animate-spin" /></span> : "upload file"}
     </FilePickerButton>
   )
 }

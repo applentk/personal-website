@@ -1,7 +1,7 @@
 export default function FilesLoading() {
   return (
     <div className="flex flex-col gap-2">
-      <h1 className="text-xl">files</h1>
+      <h1 className="text-lg">files</h1>
       <div className="grid grid-cols-4 gap-2 mt-4">
         <div className="px-2 h-50 flex items-center justify-center border border-gray-300 rounded-lg text-gray-400">
           upload file

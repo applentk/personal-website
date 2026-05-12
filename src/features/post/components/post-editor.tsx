@@ -5,8 +5,9 @@ import TiptapEditor from "@/features/editor/components/tiptap-editor"
 import { updatePost } from "@/features/post/queries"
 import { Post } from "@/features/post/types"
 import { ImageIcon, X } from "lucide-react"
-import { useEffect, useRef, useState } from "react"
+import { useState } from "react"
 import Image from "next/image"
+import { useAutosave } from "@/hooks/use-auto-save"
 
 interface PostEditorProps extends React.HTMLAttributes<HTMLDivElement> {
   initialPost: Post
@@ -16,49 +17,12 @@ export default function PostEditor({ initialPost, className, ...props }: PostEdi
   const [title, setTitle] = useState(initialPost.title)
   const [content, setContent] = useState(initialPost.content)
   const [thumbnail, setThumbnail] = useState(initialPost.thumbnail)
-  const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "error">("idle")
+  const { saveState } = useAutosave({
+    data: { title, content, thumbnail },
+    onSave: (data) => updatePost(initialPost.id, data)
+  })
 
   const [isFileSelectorOpen, setIsFileSelectorOpen] = useState(false)
-  const lastSavedRef = useRef({
-    title: initialPost.title,
-    content: initialPost.content,
-    thumbnail: initialPost.thumbnail,
-  })
-  const saveRequestIdRef = useRef(0)
-
-  useEffect(() => {
-    const nextPostState = {
-      title,
-      content,
-      thumbnail: thumbnail,
-    }
-
-    if (nextPostState.title === lastSavedRef.current.title &&
-        nextPostState.content === lastSavedRef.current.content &&
-        nextPostState.thumbnail?.id === lastSavedRef.current.thumbnail?.id) return
-
-    setSaveState("saving")
-
-    const timer = setTimeout(async () => {
-      const requestId = ++saveRequestIdRef.current
-
-      try {
-        await updatePost(initialPost.id, nextPostState)
-
-        if (requestId === saveRequestIdRef.current) {
-          lastSavedRef.current = nextPostState
-          setSaveState("saved")
-        }
-      }
-      catch {
-        if (requestId === saveRequestIdRef.current) { 
-          setSaveState("error")
-        }
-      }
-    }, 500)
-
-    return () => clearTimeout(timer)
-  }, [content, initialPost.id, thumbnail, title])
 
   return (
     <div className={`max-w-2xl mx-auto ${className}`} {...props}>
