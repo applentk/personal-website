@@ -23,9 +23,11 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "applezk",
-  description: "applezk's blog",
+  title: "applentk",
+  description: "applentk's blog",
 }
+
+export const dynamic = "force-dynamic";
 
 interface RootLayoutProps {
   children: ReactNode
