@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "postinstall": "npx prisma generate && npx prisma migrate deploy",
+    "postinstall": "prisma generate",
     "dev": "next dev",
     "build": "next build",
+    "prestart": "prisma migrate deploy",
     "start": "next start",
     "lint": "eslint"
   },
